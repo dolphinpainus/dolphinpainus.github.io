@@ -1,0 +1,283 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd"><!-- <!DOCTYPE HTML> -->
+<html lang="en">
+	<head>
+	<title>Insomniac Gamers</title>
+	<meta name="description" content="All day every day live video game streaming!">
+	<meta name="keywords" content="gaming,game,video,chat,stream,games,live,insomniac,gamers,">
+	<meta name="author" content="Kayla (Adieuu)">
+	<meta name="robots" content="index, follow">
+	<meta http-equiv='Content-Type' content='text/html; charset=utf-8'>
+	<link rel="stylesheet" type="text/css" href="Dimitri.css">
+	<link rel="stylesheet" type="text/css" href="Ardiem2.css">
+	<link rel="stylesheet" type="text/css" href="mainpage6.css">
+	<link rel='icon' href='favicons.ico' type='image/x-icon'/ >
+	<script type="text/javascript" src="/css/bigjs.js"></script>
+	<script type="text/javascript" src="/css/bookmark.js"></script>
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+	<script src="/js/jquery-1.9.1.js"></script>
+	<script src="/js/jquery-ui.js"></script>
+
+<script>
+
+function refreshTicker()
+{
+ document.getElementById("ticker").src = document.getElementById("ticker").src;
+}
+
+
+
+if(window.attachEvent) {window.attachEvent('onload', tickerInit);}
+else if(window.addEventListener) {window.addEventListener('load', tickerInit, false);}
+else {document.addEventListener('load', tickerInit, false);}
+
+function tickerInit()
+{
+ checkStatus();
+ getTicker();
+    var frameRefreshInterval = setInterval(
+  function() 
+   {
+    getTicker();
+   }, 300000);
+}
+</script>
+<!-- End Ticker Stuff! -->
+
+<!-- Switch Stuff! -->   
+<SCRIPT LANGUAGE="JavaScript">
+var mode = undefined;
+var oldmode = undefined;
+var checktimer = undefined;
+var autoswitch = "off";
+
+function go(loc){
+	if(loc == 'video3.html')
+	{
+		document.getElementById('LS').src = "/im/twitch1.png";
+	}
+	else
+	{
+		document.getElementById('LS').src = "/im/livestream1.png";
+	}
+    document.getElementById('lswitch').src = loc;
+}
+</script>
+    
+<script type="text/javascript">
+var TTVurl = "https://api.twitch.tv/kraken/channels/insomniacgamers12345";
+    </script>
+   
+<script>
+function checkStatus()
+{
+	$.ajax({
+	type: "GET",
+    url: "https://api.twitch.tv/kraken/streams/insomniacgamers12345?callback=",
+	})
+	.done(function(data)
+	{
+	var TTVdata = data["stream"];
+		if((mode == 't' || mode == undefined) && TTVdata==null)
+		{
+			mode = 'l';
+		}
+		else if((mode == 'l' || mode==undefined) && TTVdata != null)
+		{
+			mode = 't';
+		}
+       
+		if(oldmode != mode)
+		{
+			if(mode == 't')
+			{
+				go('http://player.twitch.tv/?channel=insomniacgamers12345');
+				if(autoswitch == "on")
+				{
+					clearInterval(checktimer);
+					checktimer = setInterval(function(){checkStatus();}, 900000);
+				}
+			}
+			else
+			{
+				go('video3.html'); 
+				if(autoswitch == "on")
+				{
+					clearInterval(checktimer);
+					checktimer = setInterval(function(){checkStatus();}, 50000);
+				}
+			}
+		}
+		oldmode = mode;
+	})
+};
+
+function getTicker()
+{
+	$.ajax({
+				type: "GET",
+				url: "https://api.twitch.tv/kraken/streams/insomniacgamers12345?callback=",
+				async: false
+			})
+			.done(function(data)
+			{
+				var streamdata=data["stream"];
+				if(streamdata!=null)
+				{
+					var namedata=streamdata["channel"]["status"];
+				}
+				if(typeof namedata == "undefined")
+				{
+					document.getElementById("bgwrap").innerHTML="Stream is Currently Offline";		
+				}
+				else
+				{
+					document.getElementById("bgwrap").innerHTML=namedata;
+				}
+			});
+}
+
+function toggleAuto()
+{
+	if(autoswitch == "on")
+	{
+		clearInterval(checktimer);
+		autoswitch = "off";
+		document.getElementById("switchicon").src = "autooff.png";
+	}
+	
+	else
+	{
+		autoswitch = "on";
+		document.getElementById("switchicon").src = "autoon.png";
+		checkStatus();
+	}
+}
+
+function switchStatus()
+{
+	if(mode == 't')
+	{
+		oldmode = undefined;
+		mode = 'l';
+		go('video3.html');
+		if(autoswitch == "on")
+		{
+			clearInterval(checktimer);
+			checktimer = setInterval(function(){checkStatus();}, 15000);
+		}
+	}
+	else 
+	{
+		oldmode = undefined;
+		mode = 't';
+		go('http://player.twitch.tv/?channel=insomniacgamers12345');
+		if(autoswitch == "on")
+		{
+			clearInterval(checktimer);
+			checktimer = setInterval(function(){checkStatus();}, 900000);
+		}
+	}
+};
+</script>
+
+<!-- End Switch Stuff! -->
+
+<!-- Because google dun like when I put it into an external file -->
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-36025735-1']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+<!--[if gte IE 9]>
+  <style type="text/css">
+    ul#navbar li a {
+       filter: none;
+    }
+  </style>
+<![endif]-->
+
+</head>
+
+<body>
+	<div id="container">
+		<div id="topb"><img src="/im/topbar.jpg" alt="banner"></img>
+			<div id="bback">
+			<div class="banner" id="header">
+				<img src="banner.png" id="theimage" alt="radar image" onclick="reloadImage();" width="400px" height="50px" name="theimage">
+			</div>
+			</div>
+			<div id="sitelinks">
+			<table id="linkstable">
+				<tr>
+					<td><a href="http://www.facebook.com/insomniacgamers" target="_blank"><img src="/im/facebook.png" alt="Facebook" class="bottomimg" title="Facebook"></a></td>
+					<td><a href="http://twitter.com/InsomGamersNet" target="_blank"><img src="/im/twitter.png" alt="Twitter" class="bottomimg" title="Twitter"></a></td>
+					<td><a href="http://steamcommunity.com/groups/InsomniacGamersNet" target="_blank"><img src="/im/steam.png" alt="Steam" class="bottomimg" title="Steam"></a></td>
+					<td><a href="http://igmanual.insomniacgamers.net" target="_blank"><img src="icon-tumblr.png" alt="Steam" class="bottomimg" title="IG Manual"></a></td>
+					<td><a href="http://instagram.com/insomniagram" target="_blank"><img src="icon-instagram.png" alt="Steam" class="bottomimg" title="Instagram"></a></td>
+					<td><a href="http://www.youtube.com/channel/UC0Fz6nkLXtTNaeBfIMHJr_Q" target="_blank"><img src="icon-youtube.png" alt="YouTube" class="bottomimg" title="Youtube"></a></td>
+					<td><a href="http://insomniacgamers.spreadshirt.com" target="_blank"><img src="icon-spreadshirt.png" alt="Spreadshirt" class="bottomimg" title="Spreadshirt"></a></td>
+				</tr>
+			</table>
+			</div>
+		</div>
+	<nav>
+		<table id="navbar">
+			<tr>
+			<td><a href="http://insomniacgamers.net/IGForums" target="_blank">FORUMS</a></td>
+			<td><a href="IGcalendar.html" target="_blank">CALENDAR</a></td>
+			<td><a href="http://insomniacgamers.net/IGForums/index.php?topic=21.0" target="_blank">CURRENTLY STREAMING</a></td>
+			<td><a href="rules.html" target="_blank">RULES</a></td>
+			<td><a href="http://goo.gl/forms/vqhtcSDtgY" target="_blank">REPORT ABUSE</a></td>
+			<td><a href="index.html" target="_blank">CU STREAM</a></td>
+			<td><a href="http://insomniacgamers.net/Donate.html" target="_blank">DONATE</a></td>
+			</tr>
+		</table>
+	</nav>
+	<div id="streamcontainer">
+	<div id="mainpanel" class="center">
+		<div id="bgwrap">
+			<iframe id="ticker" width="100%" height="100%" src="" frameborder="0" scrolling="no"></iframe>
+		</div>
+		<div id="streamwrap">
+			<div id="stream">
+				<span id="something" name="something" style="position:absolute;left:0px;top:0px;z-index:1;width:100%;height:100%">
+					<iframe id="lswitch" src="https://player.twitch.tv/?channel=insomniacgamers12345&parent=swcprojects.info" width="100%" height="100%" frameborder="0" scrolling="no"></iframe>
+				</span>
+			</div>
+		</div>	
+		<div id="chatwrap">
+			<div style="z-index:1; width:100%; height:100%; position:absolute; top:0; right:0;" id="ttvchat"><iframe id="twitchsrc" style="margin:0; padding:0;" width="100%" height="100%" src="https://www.twitch.tv/embed/insomniacgamers12345/chat?darkpopout&parent=swcprojects.info" frameborder="0" scrolling="no"></iframe></div>
+		</div>
+		<div id="bwrap">
+			<div id="menu" class="center">
+				<div id="popvid">
+					<a href="http://channels.insomniacgamers.net/dswitch.html" onclick="NewWindow(this.href,'Popout Video','800','500','no','center');return false" onfocus="this.blur()"><img src="/im/video.png" alt="Popout Video" class="bottomimg"></a>
+					<img src="/im/livestream1.png" id="LS" onclick="javascript: switchStatus();" alt="Livestream" name="LS" style="cursor: pointer;" class="bottomimg"> 
+					<img src="autooff.png" id="switchicon" onclick="javascript: toggleAuto();" alt="Autoswitch" name="switchicon" style="cursor: pointer;" class="bottomimg">
+					<a href="http://insomniacgamers.net/fullscreen3.html"><img src="/im/fullscreen1.png" alt="fullscreen" class="bottomimg"></a>
+					</div>
+
+				<div id="popchat">
+					<a href="fullscreen2.html" onclick="NewWindow(this.href,'Popout Chat','450','700','no','center');return false" onfocus="this.blur();"><img src="/im/chat.png" alt="Popout Chat" class="bottomimg"></a>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div id="bottom"></div>
+		<div id="footer"><br>
+			
+		</div>	
+	</div>
+	</div>
+</body>
+</html>
