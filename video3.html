@@ -1,0 +1,136 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+	<title>IG Livestream</title>
+	<meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+	<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+	<meta http-equiv="Pragma" content="no-cache" />
+	<meta http-equiv="Expires" content="0" />
+	<link rel="stylesheet" type="text/css" href="/css/ProFontWindows.css">
+	<link rel="stylesheet" href="/css/fvidcss23.css" />
+	<link rel="stylesheet" href="/js/jquery-ui.css" />
+	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/swfobject/2.2/swfobject.js"></script>
+	<script src="/js/jquery-1.9.1.js"></script>
+	<script src="/js/jquery-ui.js"></script>
+
+		<script type="text/javascript">
+			document.domain = "insomniacgamers.net";
+		</script>
+
+  <script type="text/javascript">
+    var volume;
+    var player;
+    params = {AllowScriptAccess: 'always', wmode: 'opaque'};
+    function livestreamPlayerCallback(event) {
+      if (event == 'ready') {
+	player = document.getElementById("livestreamPlayer");
+      	player.setDevKey('NE1Giw64vhwlgjxXqvJJoJ0o8TVY2jVvM0JLi3Gxodb6y8wGsi1ZzD8-NK8Rs5rk81Sf9C9kWBEXAGTYI-45uQQNt7__Cp8z8l77JWmKIyc');
+      	player.load('insomniacstream');	
+		player.startPlayback();
+		setInterval(function(){updateViewerCount()}, 2000);
+		player.setVolume(0.1);
+      }
+ }
+
+    
+      
+    swfobject.embedSWF("http://cdn.livestream.com/chromelessPlayer/v20/playerapi.swf",
+      "livestreamPlayer", "100%" , 500 ,  "9.0.0", "expressInstall.swf", null, params);
+  </script>
+
+
+	<script>
+	$(function() {
+	$( "#slider-vertical" ).slider({
+	orientation: "horizontal",
+	range: "min",
+	min: 0,
+	max: 100,
+	value: 10,
+	
+	slide: function( event, ui ) {
+	$( "#amount" ).val( ui.value ); 
+    		player.setVolume(ui.value/100);
+	}
+	});
+	$( "#amount" ).val( $( "#slider-vertical" ).slider( "value" ) );
+	});
+	</script>
+    
+ <script>
+     function mute()
+     {
+            volume = player.getVolume();
+            player.setVolume(0);
+            document.getElementById("volumecontrol").setAttribute("onclick", "javascript: unmute();");
+             document.getElementById("volumecontrol").setAttribute("src", "/im/volumemute.png");
+    }
+     
+     function unmute()
+     {
+         player.setVolume(volume);
+         document.getElementById("volumecontrol").setAttribute("onclick", "javascript: mute();");
+     document.getElementById("volumecontrol").setAttribute("src", "/im/volumemax.png");
+     }
+     
+     function pause()
+    {
+        player.stopPlayback();
+        document.getElementById("playbutton").setAttribute("onclick", "javascript: play();");
+     document.getElementById("playbutton").setAttribute("src", "/im/play.png");
+     }
+     
+     function play()
+    {
+        player.startPlayback();
+         updateViewerCount();
+        document.getElementById("playbutton").setAttribute("onclick", "javascript: pause();");
+     document.getElementById("playbutton").setAttribute("src", "/im/pause.png");
+     }
+     
+      
+      function updateViewerCount() {
+        document.getElementById('viewercount').innerHTML = player.getViewerCount() + ' VIEWERS';
+      if(player.isLive())
+       {
+         document.getElementById('liveind').innerHTML = '<img src="/im/liveb.jpg">';
+     }
+     else
+     {document.getElementById('liveind').innerHTML = '';}
+      }
+    </script>
+    
+    <base target="_parent" />
+    
+</head>
+	<body bgcolor="#ffffff" style="overflow:hidden;" onResize="saveframesize();">
+
+
+ 		
+  <div id="livestreamPlayer">
+  <h1>This page requires 
+  </h1>
+    <p><a href="http://www.adobe.com/go/getflashplayer">download flash</a></p>
+  <h1>Or if you are on mobile try this page</h1>
+    <p><a href="http://insomniacgamers.net/mobile.html" target="_blank">Mobile Page</a></p>
+        </div>
+	<div id="vwrap">
+
+		<div id="vmenu">
+
+			<div id="vplay">
+
+			<input type="image" id="playbutton" src="/im/pause.png" value="pause" onclick="javascript: pause()"/>
+	                <input type="image" id="volumecontrol" src="/im/volumemax.png" onclick="javascript: mute();"/>    
+	                <div id = "slidewrap"><div id="slider-vertical"></div></div>
+			<div id="liveind"></div>
+			</div>
+
+			<div id="viewercount"></div>	
+				
+			<div id="midtext"><a href="http://steamcommunity.com/groups/InsomniacGamersNet" target="_blank">Be sure to join our Steam group!</a></div>
+                </div>
+	</div>
+
+</body>
+</html>

@@ -1,0 +1,90 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
+<title>Default Switch</title>
+
+		<script type="text/javascript">
+			document.domain = "insomniacgamers.net";
+		</script>
+
+<script src="http://channels.insomniacgamers.net/js/jquery-1.9.1.js"></script>
+<script src="http://channels.insomniacgamers.net/js/jquery-ui.js"></script>
+    
+<SCRIPT LANGUAGE="JavaScript">
+var mode = undefined;
+var oldmode = undefined;
+    
+function go(loc){
+    document.getElementById('lswitch').src = loc;
+}
+</script>
+    
+<script type="text/javascript">
+var TTVurl = "http://api.justin.tv/api/stream/list.json?channel=insomniacgamers12345&jsonp=?";
+    </script>
+   
+<script>
+function checkStatus()
+{
+	$.ajax({
+	type: "GET",
+    url: "https://api.twitch.tv/kraken/streams/insomniacgamers12345?callback=",
+    dataType: "jsonp"
+	})
+	.done(function(data)
+	{
+	var TTVdata = data["stream"];
+		if((mode == 't' || mode == undefined) && TTVdata==null)
+		{
+			mode = 'l';
+		}
+		else if((mode == 'l' || mode==undefined) && TTVdata != null)
+		{
+			mode = 't';
+		}
+       
+		if(oldmode != mode)
+		{
+			if(mode == 't')
+			{
+				go('http://channels.insomniacgamers.net/video2.html');
+				
+			}
+			else
+			{
+				go('http://channels.insomniacgamers.net/video3.html'); 
+				
+			}
+		}
+		oldmode = mode;
+	});
+};
+
+    </script>
+    <script>
+window.onload = function() { 
+        checkStatus();
+        setInterval(function(){checkStatus();}, 10000);
+    };
+</script>
+    
+    
+    
+</head>
+
+<body>
+
+	<body bgcolor="#000000" style="overflow:hidden;" onResize="saveframesize();">
+	
+	<span id="something" name="something" style="position:absolute;left:0px;top:0px;z-index:1;width:100%;height:100%">
+  
+	<iframe id="lswitch" src="http://channels.insomniacgamers.net/video3.html" width="100%" height="100%" frameborder="0" scrolling="no"></iframe>
+	
+	</span>
+
+
+</body>
+
+</html>

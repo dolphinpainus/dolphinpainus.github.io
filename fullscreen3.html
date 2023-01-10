@@ -1,0 +1,297 @@
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+ <link rel="stylesheet" type="text/css" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css"/>
+  <script src="http://code.jquery.com/jquery-1.10.2.js"></script>
+  <script src="http://code.jquery.com/ui/1.11.2/jquery-ui.js"></script>
+  <title>IG Fullscreen</title>
+  <style>
+  body {
+	background-color:#000;
+	color: #FFFFFF;
+	font-family: ProFontWindows, Verdana;
+	font-size:12px;
+	overflow-x: hidden;
+	overflow-y: hidden;
+}
+	html, body {
+	margin:0; 
+	padding:0;
+	height: 97%;
+}
+
+a:hover {
+	text-decoration:underline;
+	color:#FFFFFF;
+} 
+
+a:link {
+	color:#FFFFFF;
+	text-decoration:none;
+}
+a:visited {
+	color:#FFFFFF;
+}
+
+a:active {
+	color:#FFFFFF;
+}
+
+
+
+#navbar {
+	display: inline;
+	float: right;
+}
+
+#navbar a {
+	padding-left: 1.5px;
+	padding-right: 1.5px;
+	margin-top: 2px;
+	border-style: solid;
+	border-width: 1px;
+	border-color: #777777;
+	display: inline;
+	position: relative;
+}
+
+.social
+{
+	top: 3px !important;
+	border-style: none !important;
+}
+    
+iframe, div {
+	margin: 0;
+	padding: 0;
+	border: 0;
+}
+
+div
+{
+	float: left;
+}
+
+#ticker {position: absolute; top:0; left: 0; width: 100%; height: 23px; overflow-x:hidden;}
+#wrapper {width: 100%; position: absolute; top: 23px; bottom: 27px; left: 0px; float: left;}
+#video {width: 75%; height: 100%; position: relative; left: 0;}
+#chat {width: 25%; height: 100%; position: relative; right: 0;}
+#bottom {width: 100%; position: absolute; background: #000000; bottom: 0; height: 25px;}
+#chatratio {display: inline-block; float: left;}
+
+#slide
+{
+    position: relative;
+    height: 10px;
+    width: 100px;
+    z-index: 2;
+	display: inline;
+	top: 3px;
+}
+
+#slider
+{
+	background: #000000;
+}
+
+#slider.ui-slider .ui-slider-horizontal 
+{ height: 23px !important; }
+
+.ui-slider
+{
+	position: relative;
+	z-index: 2;
+	width: 100%;
+	height: 10px;
+	cursor: default;
+}
+.ui-slider .ui-slider-handle {
+  position: absolute;
+  z-index: 2;
+  width: 1em;
+  height: 16px;
+  cursor: default;
+  border-color: #FFFFFF;
+  background: #FFFFFF;
+}
+
+#slider .ui-slider-range
+{
+	background-image: none;
+	background: #000000;
+	border-color: white;
+}
+
+  </style>
+  
+ <script>
+ $(document).ready(function() 
+ {
+    $("#slider").slider(
+	{
+		min: 15,
+		max: 85,
+		value: 75,
+		step: 5,
+		slide: function(event, ui)
+		{
+			$("#video").width(ui.value+"%");
+			$("#chat").width((100-ui.value)+"%");
+		}
+	});
+  });
+  
+function refreshTicker()
+{
+ document.getElementById("tickerframe").src = document.getElementById("tickerframe").src;
+}
+
+window.onload = function() {
+ refreshTicker();
+    var frameRefreshInterval = setInterval(
+  function() 
+   {
+    refreshTicker();
+   }, 300000);
+}
+
+function swapVideo(){
+	if(document.getElementById('videoframe').src == 'http://channels.insomniacgamers.net/video2.html')
+	{
+		document.getElementById('videoframe').src = "http://channels.insomniacgamers.net/video3.html";
+	}
+	else
+	{
+		document.getElementById('videoframe').src = "http://channels.insomniacgamers.net/video2.html";
+	}
+	
+	if(autoswitch == "on")
+	{
+		toggleAuto();
+	}
+}
+$(window).resize(function()
+{
+	var cratio = $("#slider").slider("option", "value");
+	$("#video").width(cratio+"%");
+	$("#chat").width((100-cratio)+"%");
+});
+  </script>
+  
+<script type="text/javascript">
+var TTVurl = "http://api.justin.tv/api/stream/list.json?channel=insomniacgamers12345&jsonp=?";
+    </script>
+   
+<script>
+
+var mode = undefined;
+var oldmode = undefined;
+var checktimer = undefined;
+var autoswitch = "off";
+
+function go(loc){
+    document.getElementById('videoframe').src = loc;
+}
+
+function checkStatus()
+{
+	$.ajax({
+	type: "GET",
+    url: "https://api.twitch.tv/kraken/streams/insomniacgamers12345?callback=",
+    dataType: "jsonp"
+	})
+	.done(function(data)
+	{
+	var TTVdata = data["stream"];
+		if((mode == 't' || mode == undefined) && TTVdata==null)
+		{
+			mode = 'l';
+		}
+		else if((mode == 'l' || mode==undefined) && TTVdata != null)
+		{
+			mode = 't';
+		}
+       
+		if(oldmode != mode)
+		{
+			if(mode == 't')
+			{
+				go('http://channels.insomniacgamers.net/video2.html');
+				if(autoswitch == "on")
+				{
+					clearInterval(checktimer);
+					checktimer = setInterval(function(){checkStatus();}, 900000);
+				}
+			}
+			else
+			{
+				go('http://channels.insomniacgamers.net/video3.html'); 
+				if(autoswitch == "on")
+				{
+					clearInterval(checktimer);
+					checktimer = setInterval(function(){checkStatus();}, 15000);
+				}
+			}
+		}
+		oldmode = mode;
+	});
+};
+
+function toggleAuto()
+{
+	if(autoswitch == "on")
+	{
+		clearInterval(checktimer);
+		autoswitch = "off";
+		document.getElementById("autostatus").style.color="red";
+		document.getElementById("autostatus").innerHTML = "Off";
+	}
+	
+	else
+	{
+		autoswitch = "on";
+		document.getElementById("autostatus").style.color="green";
+		document.getElementById("autostatus").innerHTML = "On";
+		checkStatus();
+	}
+}
+</script>
+
+  
+</head>
+<body>
+<div id="ticker">
+<iframe id="tickerframe" src="http://channels.insomniacgamers.net/ticker.php" width="100%" height="100%"></iframe>
+</div>
+<div id="wrapper">
+	<div id="video">
+		<iframe id="videoframe" src = "http://channels.insomniacgamers.net/video2.html" width="100%" height="100%"></iframe>
+	</div>
+	<div id="chat">
+		<div style="z-index:-1; width:100%; height:100%; position:absolute; top:0; right:0;" id="chatango"><iframe id="chatsrc" height="100%" width="100%" src="http://insomniacgamers.net/fullscreen2.html" frameborder="0" scrolling="no"></iframe></div>
+		<div style="z-index:1; width:100%; height:100%; position:absolute; top:0; right:0;" id="ttvchat"><iframe id="twitchsrc" width="100%" height="100%" src="http://www.twitch.tv/chat/embed?channel=insomniacgamers12345" frameborder="0" scrolling="no"></iframe></div>
+	</div>
+</div>
+ <div id="bottom">
+		<div id="navbar">
+		<div id="chatratio">
+			<div style="margin-right: 10px;">Change Ratio: More Chat</div>
+			<div id="slide">
+				<div id="slider"></div>
+			</div>
+			<div style="margin-left: 10px; margin-right: 20px;">More Stream</div>
+		</div>
+			<a href="javascript:void(0);" id="switchbox" onClick="toggleAuto();">Autoswitch is: <span id="autostatus" style="color: red; font-weight: bold;">Off</span></a>
+			<a href="javascript:void(0);" onClick="swapVideo();">Manual Switch</a>
+			<a href="http://insomniacgamers.net/fullscreen2.html" id="igmanual" target="_blank"> Popout Chat</a>
+			<a href="http://insomniacgamers.net/IGForums/index.php" id="forum" target="_blank">Forum</a>
+			<a href="http://insomniacgamers.net/calendar" id="calendar" target="_blank">Calendar</a> <a href="http://insomniacgamers.net/Donate" id="donate" target="_blank">Donate</a>
+			<a class="social" href="https://www.facebook.com/insomniacgamers" id="facebook" target="_blank"><img src="http://insomniacgamers.net/im/facebook.png" height="18px"></img></a>
+			<a class="social" href="https://twitter.com/intent/follow?original_referer=http%3A%2F%2Finsomniacgamers.net%2F&amp;screen_name=InsomGamersNet&amp;source=followbutton&amp;variant=2.0" id="twitter" target="_blank"><img src="http://insomniacgamers.net/im/twitter.png" height="18px"></img></a>
+			<a class="social" href="http://steamcommunity.com/groups/InsomniacGamersNet" id="steam" target="_blank"><img src="http://insomniacgamers.net/im/steam.png" height="18px"></img></a>
+			<a class="social" href="http://www.youtube.com/InsomniacGamersTube" id="youtube" target="_blank"><img src="http://insomniacgamers.net/im/youtube.png" height="18px"></img></a>
+			<a href="http://insomniacgamers.spreadshirt.com/customize/noCache/1" id="store" target="_blank">Store</a>
+		</div>
+</div>
+</body>
+</html>
